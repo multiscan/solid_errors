@@ -5,6 +5,8 @@ module SolidErrors
     after_create_commit :send_email, if: -> { SolidErrors.send_emails? && SolidErrors.email_to.present? }
     after_create_commit :clear_resolved_errors, if: :should_clear_resolved_errors?
 
+    serialize :context, coder: JSON unless connection.adapter_name.downcase.include?("postgres")
+
     # The parsed exception backtrace. Lines in this backtrace that are from installed gems
     # have the base path for gem installs replaced by "[GEM_ROOT]", while those in the project
     # have "[PROJECT_ROOT]".
