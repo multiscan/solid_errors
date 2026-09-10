@@ -164,6 +164,7 @@ You can configure Solid Errors via the Rails configuration object, under the `so
 * `email_subject_prefix` - Prefix added to the subject line for email notifications. See [Email notifications](#email-notifications) for more information.
 * `base_controller_class` - Specify a different controller as the base class for the Solid Errors controller. See [Authentication](#authentication) for more information.
 * `destroy_after` - If set, Solid Errors will periodically destroy resolved records that are older than the value specified. See [Automatically destroying old records](#automatically-destroying-old-records) for more information.
+* `ignored_errors` - An array of error class names (strings) that will not be saved in addition to the default list hardcoded in `lib/solid_errors/subscriber.rb`
 
 ### Database Configuration
 
@@ -376,4 +377,3 @@ The gem is available as open source under the terms of the [MIT License](https:/
 ## Code of Conduct
 
 Everyone interacting in the SolidErrors project's codebases, issue trackers, chat rooms and mailing lists is expected to follow the [code of conduct](https://github.com/fractaledmind/solid_errors/blob/main/CODE_OF_CONDUCT.md).
-

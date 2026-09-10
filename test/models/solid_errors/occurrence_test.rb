@@ -39,6 +39,28 @@ class SolidErrors::OccurrenceTest < ActiveSupport::TestCase
     end
   end
 
+  test "an ignored error should not be saved while an acceptable one is saved" do
+    SolidErrors.ignored_errors = ["RuntimeError"]
+    # An hardcoded ignored error should be discarded
+    assert_difference -> { SolidErrors::Error.count }, 0 do
+      assert_difference -> { SolidErrors::Occurrence.count }, 0 do
+        Rails.error.report( ActionController::RoutingError.new('argh'))
+      end
+    end
+    # A user ignored error should be discarded
+    assert_difference -> { SolidErrors::Error.count }, 0 do
+      assert_difference -> { SolidErrors::Occurrence.count }, 0 do
+        Rails.error.report( RuntimeError.new("argh") )
+      end
+    end
+    # A valid error should be recorded
+    assert_difference -> { SolidErrors::Error.count }, +1 do
+      assert_difference -> { SolidErrors::Occurrence.count }, +1 do
+        Rails.error.report(StandardError.new("argh"))
+      end
+    end
+  end
+
   private
 
   def simulate_99_old_exceptions(status)
@@ -46,4 +68,5 @@ class SolidErrors::OccurrenceTest < ActiveSupport::TestCase
     SolidErrors::Error.update_all(resolved_at: Time.current) if status == :resolved
     SolidErrors::Occurrence.last.update!(id: 99, created_at: 1.day.ago)
   end
+
 end

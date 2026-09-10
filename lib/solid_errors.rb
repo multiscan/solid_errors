@@ -15,6 +15,7 @@ module SolidErrors
   mattr_accessor :email_to
   mattr_accessor :email_subject_prefix
   mattr_accessor :destroy_after
+  mattr_writer :ignored_errors
 
   class << self
     # use method instead of attr_accessor to ensure
@@ -27,6 +28,10 @@ module SolidErrors
     # this works if ENV variable set after SolidErrors is loaded
     def password
       @password ||= ENV["SOLIDERRORS_PASSWORD"] || @@password
+    end
+
+    def ignored_errors
+      @ignored_errors ||= (@@ignored_errors || []).to_h{|k| [k,true]}
     end
 
     def send_emails?
